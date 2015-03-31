@@ -90,7 +90,7 @@ DEFAULT_SSH_IDENTITY_FILE="CHANGEME"
 ##### START: Infra configuration (DO NOT MODIFY) #####
 INFRA_PROVIDER=`echo ${PROVIDER} | tr '[:lower:]' '[:upper:]'`
 INFRA_ACCOUNT=`echo ${PROVIDER_ACCOUNT} | tr '[:lower:]' '[:upper:]'`
-KNIFE_CHEF_ENCRYPTED="OFF"
+export KNIFE_CHEF_ENCRYPTED="OFF"
 
 if [[ $CHEF_ENABLED = "yes" ]]
 then
