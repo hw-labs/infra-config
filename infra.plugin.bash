@@ -24,9 +24,20 @@ function current_infra_provider {
     echo ${PROVIDER:UNSET}
 }
 
+function infra_error_msg {
+    echo "${echo_red_bold}ERROR:${echo_reset_color} ${1}" >&2
+}
+
 function extract_infra_value {
     var="${PROVIDER_ACCOUNT}_${1}"
-    echo ${!var}
+    val=${!var}
+    if [[ -z val ]]
+    then
+        infra_error_msg "No value set for ${1} under account: ${PROVIDER_ACCOUNT}!"
+        echo "UNSET"
+    else
+        echo ${!var}
+    fi
 }
 
 function extract_infra_value_or_default {
@@ -92,16 +103,16 @@ then
     fi
 fi
 
-if [[ $INFRA_PROVIDER = 'AWS' ]]
+if [[ $INFRA_PROVIDER = "AWS" ]]
 then
     export AWS_ACCESS_KEY_ID=$(extract_infra_value "ACCESS_KEY_ID")
     export AWS_SECRET_ACCESS_KEY=$(extract_infra_value "SECRET_ACCESS_KEY")
     export AWS_REGION="${PROVIDER_REGION}"
     export AWS_DEFAULT_REGION="${PROVIDER_REGION}"
-elif [[ $INFRA_PROVIDER = 'OPENSTACK' ]]
+elif [[ $INFRA_PROVIDER = "OPENSTACK" ]]
 then
     echo 'Not implemented'
-elif [[ $INFRA_PROVIDER = 'RACKSPACE' ]]
+elif [[ $INFRA_PROVIDER = "RACKSPACE" ]]
 then
     echo 'Not implemented'
 else
@@ -109,6 +120,7 @@ else
 fi
 
 export KNIFE_SSH_KEY=$(extract_infra_value_or_default "SSH_IDENTITY_FILE")
+export DIRENV_LOG_FORMAT=""
 
 ##### END: Infra configuration #####
 EOF
@@ -121,7 +133,7 @@ function infra-crypt {
     about 'toggles chef data bag encryption'
     group 'infra'
 
-    echo -e -n "${echo_bold_white}Data bag item encryption:${echo_reset_color} "
+    echo -e -n "${echo_bold_black}Data bag item encryption:${echo_reset_color} "
     if [[ $KNIFE_CHEF_ENCRYPTED = 'ON' ]]
     then
         sed -i bak "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
@@ -141,7 +153,7 @@ function infra-acct {
     group 'infra'
 
     ACCT=${1:default}
-    echo -e "${echo_bold_white}Account changed to:${echo_reset_color} ${echo_purple}${ACCT}${echo_reset_color}"
+    echo -e "${echo_bold_black}Account changed to:${echo_reset_color} ${echo_purple}${ACCT}${echo_reset_color}"
     sed -i bak "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
     direnv_fload
 }
@@ -153,7 +165,7 @@ function infra-provider {
     group 'infra'
 
     PROV=${1:aws}
-    echo -e "${echo_bold_white}Provider changed to:${echo_reset_color} ${echo_purple}${PROV}${echo_reset_color}"
+    echo -e "${echo_bold_black}Provider changed to:${echo_reset_color} ${echo_purple}${PROV}${echo_reset_color}"
     sed -i bak "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
     direnv_fload
 }
@@ -165,7 +177,7 @@ function infra-region {
     group 'infra'
 
     REGION=${1:unset}
-    echo -e "${echo_bold_white}Region change to:${echo_reset_color} ${echo_purple}${REGION}${echo_reset_color}"
+    echo -e "${echo_bold_black}Region change to:${echo_reset_color} ${echo_purple}${REGION}${echo_reset_color}"
     sed -i bak "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
     direnv_fload
 }
@@ -174,7 +186,7 @@ function infra-region {
 function infra_account_display {
     if [[ $PROVIDER != '' ]]
     then
-        echo -e "[${yellow}$(current_infra_provider)${orange}:${yellow}$(current_infra_acct)${orange}:${yellow}$(current_infra_region)${orange}] "
+        echo -e "[${yellow}$(current_infra_provider)${orange}:${blue_bold}$(current_infra_acct)${orange}:${yellow}$(current_infra_region)${orange}] "
     fi
 }
 
