@@ -187,7 +187,7 @@ function infra-region {
 function infra_account_display {
     if [[ $PROVIDER != '' ]]
     then
-        echo -e "[${yellow}$(current_infra_provider)${orange}:${blue_bold}$(current_infra_acct)${orange}:${yellow}$(current_infra_region)${orange}] "
+        echo -e "[${yellow}$(current_infra_provider)${orange}:${bold_blue}$(current_infra_acct)${orange}:${purple}$(current_infra_region)${orange}] "
     fi
 }
 
