@@ -25,7 +25,7 @@ function current_infra_provider {
 }
 
 function infra_error_msg {
-    echo "${echo_red_bold}ERROR:${echo_reset_color} ${1}" >&2
+    echo "ERROR: ${1}" >&2
 }
 
 function extract_infra_value {
@@ -34,7 +34,6 @@ function extract_infra_value {
     if [[ -z val ]]
     then
         infra_error_msg "No value set for ${1} under account: ${PROVIDER_ACCOUNT}!"
-        echo "UNSET"
     else
         echo ${!var}
     fi
@@ -44,7 +43,7 @@ function extract_infra_value_or_default {
     value=$(extract_infra_value ${1})
     if [[ value = '' ]]
     then
-        var="${PROVIDER_ACCOUNT}_${1}"
+        var="DEFAULT_${1}"
         echo ${!var}
     else
         echo ${value}
