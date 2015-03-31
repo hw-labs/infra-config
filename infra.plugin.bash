@@ -48,7 +48,7 @@ function infra-config {
     then
         echo -e "${echo_bold_red}ERROR:${echo_reset_color} Will not overwrite existing .envrc file!"
     else
-        cat <<EOF > .envrc
+        cat << 'EOF' > .envrc
 ##### START: User edit section #####
 
 # Provider settings
