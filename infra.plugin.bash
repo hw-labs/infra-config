@@ -29,7 +29,7 @@ function infra_error_msg {
 }
 
 function extract_infra_value {
-    var="${PROVIDER_ACCOUNT}_${1}"
+    var="${INFRA_ACCOUNT}_${1}"
     val=${!var}
     if [[ -z val ]]
     then
@@ -73,23 +73,24 @@ export PROVIDER_ACCOUNT="default"
 export PROVIDER_REGION="us-east-1"
 
 # AWS
-export DEFAULT_ACCESS_KEY_ID="CHANGEME"
-export DEFAULT_SECRET_ACCESS_KEY="CHANGEME"
+DEFAULT_ACCESS_KEY_ID="CHANGEME"
+DEFAULT_SECRET_ACCESS_KEY="CHANGEME"
 
 # Chef settings
-export CHEF_ENABLED="yes"
-export DEFAULT_KNIFE_USER="${USER:UNSET}"
-export DEFAULT_KNIFE_CHEF_SECRET_FILE_PATH=""
-export DEFAULT_KNIFE_CHEF_SERVER_URL=""
-export DEFAULT_KNIFE_CLIENT_KEY=""
+CHEF_ENABLED="yes"
+DEFAULT_KNIFE_USER="${USER:UNSET}"
+DEFAULT_KNIFE_CHEF_SECRET_FILE_PATH=""
+DEFAULT_KNIFE_CHEF_SERVER_URL=""
+DEFAULT_KNIFE_CLIENT_KEY=""
 
-export DEFAULT_SSH_IDENTITY_FILE="CHANGEME"
+DEFAULT_SSH_IDENTITY_FILE="CHANGEME"
 
 ##### END: User edit section #####
 
 ##### START: Infra configuration (DO NOT MODIFY) #####
 INFRA_PROVIDER=`echo ${PROVIDER} | tr '[:lower:]' '[:upper:]'`
-export KNIFE_CHEF_ENCRYPTED="OFF"
+INFRA_ACCOUNT=`echo ${PROVIDER_ACCOUNT} | tr '[:lower:]' '[:upper:]'`
+KNIFE_CHEF_ENCRYPTED="OFF"
 
 if [[ $CHEF_ENABLED = "yes" ]]
 then
