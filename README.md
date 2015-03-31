@@ -58,7 +58,7 @@ source ~/.bashrc
 Now enable the infra tools by installing the plugin and enabling it:
 
 ```
-$ wget -O ~/.bash_it/custom/infra.plugin.bash https://github.com/hw-labs/infra-config/blob/master/infra.plugin.bash
+$ wget -O ~/.bash_it/custom/infra.plugin.bash https://raw.githubusercontent.com/hw-labs/infra-config/master/infra.plugin.bash
 $ ln -s ~/.bash_it/custom/infra.plugin.bash ~/.bash_it/plugins/enabled/infra.plugin.bash
 ```
 
