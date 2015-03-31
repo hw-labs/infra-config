@@ -50,7 +50,6 @@ export EDITOR="/usr/bin/emacs"
 export GIT_EDITOR="/usr/bin/emacs"
 
 source $BASH_IT/bash_it.sh
-source ~/.bashrc
 ```
 
 ### Enable infra tools
@@ -58,14 +57,14 @@ source ~/.bashrc
 Now enable the infra tools by installing the plugin and enabling it:
 
 ```
-$ wget -O ~/.bash_it/custom/infra.plugin.bash https://raw.githubusercontent.com/hw-labs/infra-config/master/infra.plugin.bash
+$ curl -o ~/.bash_it/custom/infra.plugin.bash https://raw.githubusercontent.com/hw-labs/infra-config/master/infra.plugin.bash
 $ ln -s ~/.bash_it/custom/infra.plugin.bash ~/.bash_it/plugins/enabled/infra.plugin.bash
 ```
 
-and append `infra_commands_enable` to the `~/.bashrc` file:
+and append `infra_commands_enable` to the `~/.bash_profile` file:
 
 ```
-echo "infra_commands_enable" >> ~/.bashrc
+echo "infra_commands_enable" >> ~/.bash_profile
 ```
 
 ### Load tools
