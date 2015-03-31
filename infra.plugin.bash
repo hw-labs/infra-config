@@ -205,7 +205,7 @@ function infra_data_bag_crypt_display {
 
 # Configure prompt to display all information
 function infra_command_prompt {
-    PS1="\n${yellow}$(ruby_version_prompt) ${purple}\h ${reset_color}in ${green}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
+    PS1="\n${yellow}$(ruby_version_prompt) ${black}\h ${reset_color}in ${black}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
 }
 
 # Enable the commands
