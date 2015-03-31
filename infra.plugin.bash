@@ -31,7 +31,7 @@ function infra_error_msg {
 function extract_infra_value {
     var="${INFRA_ACCOUNT}_${1}"
     val=${!var}
-    if [[ -z val ]]
+    if [[ val = "" ]]
     then
         infra_error_msg "No value set for ${1} under account: ${PROVIDER_ACCOUNT}!"
     else
