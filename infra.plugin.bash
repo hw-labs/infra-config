@@ -1,5 +1,6 @@
-cite about-plugin
-about-plugin 'infra settings helpers'
+# TODO: Can we check for functions prior?
+#cite about-plugin
+#about-plugin 'infra settings helpers'
 
 ## Add some simple helpers to get us rolling
 function direnv_rc {
@@ -49,12 +50,16 @@ function infra-config {
         echo -e "${echo_bold_red}ERROR:${echo_reset_color} Will not overwrite existing .envrc file!"
     else
         cat << 'EOF' > .envrc
+##### START: Helper loader (DO NOT MODIFY) #
+source ~/.bash_it/custom/infra.plugin.bash #
+##### END: Helper loader ###################
+
 ##### START: User edit section #####
 
 # Provider settings
 export PROVIDER="aws"
 export PROVIDER_ACCOUNT="default"
-export PROVIDER_REGION="us-west-1"
+export PROVIDER_REGION="us-east-1"
 
 # AWS
 export DEFAULT_ACCESS_KEY_ID="CHANGEME"
@@ -71,8 +76,7 @@ export DEFAULT_SSH_IDENTITY_FILE="CHANGEME"
 
 ##### END: User edit section #####
 
-##### START: Infra configuration #####
-##### NOTE: DO NOT EDIT #####
+##### START: Infra configuration (DO NOT MODIFY) #####
 INFRA_PROVIDER=`echo ${PROVIDER} | tr '[:lower:]' '[:upper:]'`
 export KNIFE_CHEF_ENCRYPTED="OFF"
 
@@ -96,8 +100,10 @@ then
     export AWS_DEFAULT_REGION="${PROVIDER_REGION}"
 elif [[ $INFRA_PROVIDER = 'OPENSTACK' ]]
 then
+    echo 'Not implemented'
 elif [[ $INFRA_PROVIDER = 'RACKSPACE' ]]
 then
+    echo 'Not implemented'
 else
     echo "ERROR: Unknown provider set - ${PROVIDER}"
 fi
@@ -118,10 +124,10 @@ function infra-crypt {
     echo -e -n "${echo_bold_white}Data bag item encryption:${echo_reset_color} "
     if [[ $KNIFE_CHEF_ENCRYPTED = 'ON' ]]
     then
-        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
+        sed -i bak "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
         echo -e -n "${echo_red}disabled"
     else
-        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
+        sed -i bak "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
         echo -e -n "${echo_green}enabled"
     fi
     echo -e "${echo_reset_color}"
@@ -136,7 +142,7 @@ function infra-acct {
 
     ACCT=${1:default}
     echo -e "${echo_bold_white}Account changed to:${echo_reset_color} ${echo_purple}${ACCT}${echo_reset_color}"
-    sed -i "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
+    sed -i bak "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -148,7 +154,7 @@ function infra-provider {
 
     PROV=${1:aws}
     echo -e "${echo_bold_white}Provider changed to:${echo_reset_color} ${echo_purple}${PROV}${echo_reset_color}"
-    sed -i "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
+    sed -i bak "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -160,7 +166,7 @@ function infra-region {
 
     REGION=${1:unset}
     echo -e "${echo_bold_white}Region change to:${echo_reset_color} ${echo_purple}${REGION}${echo_reset_color}"
-    sed -i "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
+    sed -i bak "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -186,11 +192,11 @@ function infra_data_bag_crypt_display {
 
 # Configure prompt to display all information
 function infra_command_prompt {
-    PS1="\n${yellow}$(ruby_version_prompt) ${purple}\h ${reset_color}in ${green}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_provider_display):$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
+    PS1="\n${yellow}$(ruby_version_prompt) ${purple}\h ${reset_color}in ${green}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
 }
 
 # Enable the commands
 function infra_commands_enable {
     eval "$(direnv hook bash)"
-    PROMPT_COMMAND="_direnv_hook;custom_prompt_command"
+    PROMPT_COMMAND="_direnv_hook;infra_command_prompt"
 }
