@@ -1,4 +1,4 @@
-# Infrastructure tooling
+# Infrastructure CLI configuration
 
 This document defines configuration of a local *nix workstation to extend
 bash functionality in aiding common infrastructure configuration issues.
@@ -19,14 +19,19 @@ $ mkdir ~/bin
 Next, install the tools
 
 * rvm (optional)
-* hub -> into ~/bin
-* direnv -> into ~/bin
-* bash-it -> clone to .bash-it
-* infra bash-it plugin -> copy to plugins
+  * https://rvm.io/rvm/install
+* hub
+  * https://github.com/github/hub/releases
+  * Place `hub` executable at: `~/bin/hub`
+* direnv
+  * https://github.com/zimbatm/direnv/releases
+  * Place `direnv` executable at: `~/bin/direnv`
+* bash-it
+  * `git clone https://github.com/bash-it/bash-it.git ~/.bash_it`
 
 ### Configure bash
 
-Bash must be configured to use the (bash-it)[1] library. Start by running the
+Bash must be configured to use the bash-it library. Start by running the
 install script:
 
 ```
@@ -53,7 +58,7 @@ source ~/.bashrc
 Now enable the infra tools by installing the plugin and enabling it:
 
 ```
-$ wget -O ~/.bash_it/custom/infra.plugin.bash URL
+$ wget -O ~/.bash_it/custom/infra.plugin.bash https://github.com/hw-labs/infra-config/blob/master/infra.plugin.bash
 $ ln -s ~/.bash_it/custom/infra.plugin.bash ~/.bash_it/plugins/enabled/infra.plugin.bash
 ```
 
@@ -116,11 +121,10 @@ export PRODUCTION_SECRET_ACCESS_KEY="CHANGEME_PRODUCTION"
 #### Chef
 
 The infra tools provide helpers for Chef. Settings for these are located
-within the "Chef settings" section.
-
-* encrypted secret path
-* client key
-*
+within the "Chef settings" section. These variables work just like the
+credential variables above with the `PROVIDER_ACCOUNT` prefix. However,
+unlike the credential variables, if no value is defined for the current
+`PROVIDER_ACCOUNT`, it will fallback to using the "DEFAULT" prefix.
 
 ### Usage
 
