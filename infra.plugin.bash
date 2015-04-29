@@ -136,10 +136,10 @@ function infra-crypt {
     echo -e -n "${echo_bold_black}Data bag item encryption:${echo_reset_color} "
     if [[ $KNIFE_CHEF_ENCRYPTED = 'ON' ]]
     then
-        sed -i bak "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
+        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
         echo -e -n "${echo_red}disabled"
     else
-        sed -i bak "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
+        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
         echo -e -n "${echo_green}enabled"
     fi
     echo -e "${echo_reset_color}"
@@ -154,7 +154,7 @@ function infra-acct {
 
     ACCT=${1:default}
     echo -e "${echo_bold_black}Account changed to:${echo_reset_color} ${echo_purple}${ACCT}${echo_reset_color}"
-    sed -i bak "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
+    sed -i "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -166,7 +166,7 @@ function infra-provider {
 
     PROV=${1:aws}
     echo -e "${echo_bold_black}Provider changed to:${echo_reset_color} ${echo_purple}${PROV}${echo_reset_color}"
-    sed -i bak "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
+    sed -i "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -178,7 +178,7 @@ function infra-region {
 
     REGION=${1:unset}
     echo -e "${echo_bold_black}Region change to:${echo_reset_color} ${echo_purple}${REGION}${echo_reset_color}"
-    sed -i bak "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
+    sed -i "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -204,7 +204,12 @@ function infra_data_bag_crypt_display {
 
 # Configure prompt to display all information
 function infra_command_prompt {
-    PS1="\n${yellow}$(ruby_version_prompt) ${bold_black}\h ${reset_color}in ${black}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
+    if [[ "${INFRA_CONFIG_SCHEME}" = "dark" ]]
+    then
+        PS1="\n${yellow}$(ruby_version_prompt) ${purple}\h ${reset_color}in ${green}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
+    else
+        PS1="\n${yellow}$(ruby_version_prompt) ${bold_black}\h ${reset_color}in ${black}\w\n${bold_cyan}$(scm_char)${green}$(scm_prompt_info) ${orange}$(infra_account_display)${red}$(infra_data_bag_crypt_display)${green}→${reset_color} "
+    fi
 }
 
 # Enable the commands
