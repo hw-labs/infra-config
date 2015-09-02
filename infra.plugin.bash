@@ -28,6 +28,15 @@ function infra_error_msg {
     echo "ERROR: ${1}" >&2
 }
 
+function infra_sed {
+    if [[ "$(uname)" = "Darwin" ]]
+    then
+        sed -i bak ${1}
+    else
+        sed -i ${1}
+    fi
+}
+
 function extract_infra_value {
     var="${INFRA_ACCOUNT}_${1}"
     val=${!var}
@@ -136,10 +145,10 @@ function infra-crypt {
     echo -e -n "${echo_bold_black}Data bag item encryption:${echo_reset_color} "
     if [[ $KNIFE_CHEF_ENCRYPTED = 'ON' ]]
     then
-        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
+        infra_sed "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=OFF/" $(direnv_rc)
         echo -e -n "${echo_red}disabled"
     else
-        sed -i "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
+        infra_sed "s/export KNIFE_CHEF_ENCRYPTED=.*/export KNIFE_CHEF_ENCRYPTED=ON/" $(direnv_rc)
         echo -e -n "${echo_green}enabled"
     fi
     echo -e "${echo_reset_color}"
@@ -154,7 +163,7 @@ function infra-acct {
 
     ACCT=${1:default}
     echo -e "${echo_bold_black}Account changed to:${echo_reset_color} ${echo_purple}${ACCT}${echo_reset_color}"
-    sed -i "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
+    infra_sed "s/export PROVIDER_ACCOUNT=.*/export PROVIDER_ACCOUNT=${ACCT}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -166,7 +175,7 @@ function infra-provider {
 
     PROV=${1:aws}
     echo -e "${echo_bold_black}Provider changed to:${echo_reset_color} ${echo_purple}${PROV}${echo_reset_color}"
-    sed -i "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
+    infra_sed "s/export PROVIDER=.*/export PROVIDER=${PROV}/" $(direnv_rc)
     direnv_fload
 }
 
@@ -178,7 +187,7 @@ function infra-region {
 
     REGION=${1:unset}
     echo -e "${echo_bold_black}Region change to:${echo_reset_color} ${echo_purple}${REGION}${echo_reset_color}"
-    sed -i "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
+    infra_sed "s/export PROVIDER_REGION=.*/export PROVIDER_REGION=${REGION}/" $(direnv_rc)
     direnv_fload
 }
 
